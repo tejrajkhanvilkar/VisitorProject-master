@@ -67,6 +67,7 @@ class _LoginDemoState extends State<LoginDemo> {
         UserCredential user = await auth.signInWithEmailAndPassword(email: _email, password: _password);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isloggedin', true);
+        await prefs.setString('user', 'user');
         //User user = (await auth.signInWithEmailAndPassword(email: _email, password: _password)) as User;
       }catch(e){
         showError(e.toString());

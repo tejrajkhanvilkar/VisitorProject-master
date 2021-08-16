@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visitorproject/editProfile.dart';
 
 class AdminSettings extends StatefulWidget {
@@ -9,6 +11,16 @@ class AdminSettings extends StatefulWidget {
 }
 
 class _AdminSettingsState extends State<AdminSettings> {
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  signOutadmin()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isloggedin', false);
+    await prefs.setString('user', '');
+    _auth.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +51,7 @@ class _AdminSettingsState extends State<AdminSettings> {
           child:Center(
           child:SizedBox(width: 300,height: 30,
             child:ElevatedButton(
-              onPressed: (){},
+              onPressed: signOutadmin,
               child: Center(
                 child: Text('Log Out',
 

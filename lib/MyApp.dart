@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visitorproject/adminmain.dart';
 import 'package:visitorproject/usermain.dart';
 import 'adminlogin.dart';
 import 'userlogin.dart';
@@ -24,8 +25,11 @@ class _MyAppState extends State<AppState> {
   checkiflogin()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var iln =  await (prefs.getBool('isloggedin') ?? false );
-    if(iln){
+    var usertype = await (prefs.getString('user') ?? '' );
+    if(iln && usertype=='user'){
       Navigator.push(context, MaterialPageRoute(builder: (context)=> usermain()));
+    }else if(iln && usertype=='admin'){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> adminmain()));
     }
   }
 

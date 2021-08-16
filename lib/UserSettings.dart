@@ -18,6 +18,7 @@ class _UserSettingsState extends State<UserSettings> {
   signOut()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isloggedin', false);
+    await prefs.setString('user', '');
     _auth.signOut();
   }
 

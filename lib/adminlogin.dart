@@ -32,10 +32,16 @@ class _LoginDemoState extends State<LoginDemo> {
     if(_formKey.currentState!.validate()){
       _formKey.currentState!.save();
       try{
-        UserCredential user = await auth.signInWithEmailAndPassword(email: _email, password: _password);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isloggedin', true);
-        Navigator.push(context, MaterialPageRoute(builder: (_)=> adminmain()));
+        //UserCredential user = await auth.signInWithEmailAndPassword(email: _email, password: _password);
+        if(_email=='munira.bharmal@vit.edu' && _password =='12345678'){
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isloggedin', true);
+          await prefs.setString('user', 'admin');
+          Navigator.push(context, MaterialPageRoute(builder: (_)=> adminmain()));
+        }else{
+          showError('invalid credentials');
+        }
+
         //User user = (await auth.signInWithEmailAndPassword(email: _email, password: _password)) as User;
       }catch(e){
         showError(e.toString());

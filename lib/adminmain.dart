@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:visitorproject/UsersList.dart';
+import 'package:visitorproject/adminHome.dart';
 import 'AdminSetting.dart';
 import 'adminActivity.dart';
+import 'adminActivity2.dart';
 import 'registration.dart';
 
 /// This Widget is the main application widget.
@@ -25,7 +26,7 @@ class _MyNavigationBarState extends State<MyNavigationBar > {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     UserList(),
-    adminActivity(),
+    AdminActivty2(),
     AdminSettings(),
   ];
 

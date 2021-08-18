@@ -26,7 +26,9 @@ class _HomeActivityState extends State<HomeActivity>
     //Firebase Messaging
     Firebase.initializeApp();
 
-    String currentDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
+    //String currentDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
+    String currentDate = DateFormat("dd-MM-yyyy").format(DateTime.now());
+
 
     final dateDBReference=FirebaseDatabase.instance.reference().child("DateDB");
     final dateDBChildReference=dateDBReference.child(currentDate);
@@ -59,6 +61,7 @@ class _HomeActivityState extends State<HomeActivity>
 
   Widget setui(String fnm,String lnm,String mob,String whom_to_meet,String reason,String fstatus,String visitedstatusupdate)
   {
+
     return new GestureDetector(
       onLongPress: (){},
       onTap: (){},
@@ -139,13 +142,19 @@ class _HomeActivityState extends State<HomeActivity>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  ElevatedButton(onPressed: (){},
+                  ElevatedButton(onPressed: (){
+
+                  },
                       child: Text("Accept"),
 
                   ),
-                  ElevatedButton(onPressed: (){},
+                  ElevatedButton(onPressed: (){
+
+                  },
                       child: Text("Reschedule")),
-                  ElevatedButton(onPressed: (){},
+                  ElevatedButton(onPressed: (){
+
+                  },
                       child: Text("Deny")),
                 ],
               ),

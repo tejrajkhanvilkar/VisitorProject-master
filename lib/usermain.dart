@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visitorproject/MyApp.dart';
-import 'AdminHome.dart';
+
 import 'AdminSetting.dart';
 import 'HomeActivity.dart';
 import 'UserHome.dart';

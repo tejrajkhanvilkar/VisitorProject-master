@@ -21,79 +21,166 @@ class _UserListState extends State<UserList> {
 
     final userdbRef=FirebaseDatabase.instance.reference().child("Users");
     userdbRef.once().then((DataSnapshot snap)
+    {
+
+      var user=snap.value;
+      userlist.clear();
+      user.forEach((key,value)
       {
+        AuthorityDataModel authoritydatamodel=new AuthorityDataModel(
+          value['designation'],
+          value['phone'],
+          value['email'],
+          value['image'],
+          value['name'],
+          value['organization'],
+          value['uid'],
+        );
+        userlist.add(authoritydatamodel);
+      });
+      setState(() {
 
-           var user=snap.value;
-           userlist.clear();
-           user.forEach((key,value)
-           {
-                AuthorityDataModel authoritydatamodel=new AuthorityDataModel(
-                  value['designation'],
-                  value['phone'],
-                  value['email'],
-                  value['image'],
-                  value['name'],
-                  value['organization'],
-                  value['uid'],
-                );
-                userlist.add(authoritydatamodel);
-           });
-           setState(() {
-
-           });
-      }
+      });
+    }
     );
   }
 
   Widget createUserList(String des,String mob,String email,String img,String nm,String org,String uid)
   {
-      return GestureDetector(
-        onTap: (){},
-        onLongPress: (){},
-        child:  Card(
-      color: Colors.blue[100],
-          child: Container(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset("asset/images/user.png",
-                    width: 60,
-                    height: 60,),
-                    Text(
-                      '\t'+nm + '\n\t' +
-                      des + '\n\t' +
-                      mob +    '\n\t' +
-                      org+'\n\t' ,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: (){},
+      onLongPress: (){},
+      child:  Card(
+        color: Colors.blue[100],
+        child: Container(
+          height: 190,
+          child: Column(
+            children: [
+              SizedBox(height: 20,),
+              Row(
+
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: 5,),
+                  Image.asset("asset/images/user.png",
+                    width: 90,
+                    height: 90,
+
+                  ),
+                  SizedBox(width: 15.0,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        nm ,overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+
+                        ),
+                      ),
+                      SizedBox(height: 13,),
+                      Row(
+                        children: [
+                          Text(
+                            'Designation - ',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15.0,
+
+                            ),
+                          ),
+                          SizedBox(
+                            width: 150,
+                            child: Text(
+                              des  ,overflow: TextOverflow.ellipsis,maxLines: 1,
+                              softWrap: false,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Mobile No. - ' ,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15.0,
+
+                            ),
+                          ),
+                          Text(
+                            mob ,overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 30,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  SizedBox(width: 10.0,),
+                  Expanded(
+                    child: ElevatedButton(onPressed: (){},
+
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.lightGreen
 
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    ElevatedButton(onPressed: (){},
-                      child: Text("Call"),
+                      child: Row(
+                        children: [
+                          Icon(
+                              Icons.call
+                          ),
+
+                          Text("Call"),
+                        ],
+                      ),
 
                     ),
-                    SizedBox(width: 30.0,),
-                    ElevatedButton(onPressed: (){},
-                        child: Text("Message")),
-                  ],
-                ),
-              ],
-            ),
-
+                  ),
+                  SizedBox(width: 30.0,),
+                  Expanded(child:
+                  ElevatedButton(onPressed: (){},
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.blue
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                              Icons.message
+                          ),
+                          Text("Message"),
+                        ],
+                      )),),
+                  SizedBox(width: 10.0,),
+                ],
+              ),
+            ],
           ),
 
+        ),
+
       ),
-      );
+    );
   }
 
   @override
@@ -106,10 +193,10 @@ class _UserListState extends State<UserList> {
 
       body: new Container(
         child: userlist.length==0?Text("No users "):ListView.builder(
-          itemCount: userlist.length,
+            itemCount: userlist.length,
             itemBuilder: (_,index)
             {
-                return  createUserList(userlist[index].designation, userlist[index].phone,userlist[index].email,userlist[index].image, userlist[index].name, userlist[index].organization, userlist[index].uid);
+              return  createUserList(userlist[index].designation, userlist[index].phone,userlist[index].email,userlist[index].image, userlist[index].name, userlist[index].organization, userlist[index].uid);
             }
         ),
       ),

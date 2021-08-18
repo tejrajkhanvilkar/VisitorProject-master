@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:visitorproject/UsersList.dart';
-import 'AdminHome.dart';
 import 'AdminSetting.dart';
 import 'adminActivity.dart';
 import 'registration.dart';

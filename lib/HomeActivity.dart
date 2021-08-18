@@ -51,7 +51,6 @@ class _HomeActivityState extends State<HomeActivity>
         {
             visitorList.add(visitordatamodel);
             print("Data inserted...");
-
         }
 
       }
@@ -66,47 +65,6 @@ class _HomeActivityState extends State<HomeActivity>
   Widget setui(String fnm,String lnm,String mob,String whom_to_meet,String reason,String fstatus,String visitedstatusupdate, String uid, int index,String reschedule)
   {
 
-    Future<void> _showTimePicker()async{
-      final TimeOfDay? picked=await showTimePicker(context: context,initialTime: TimeOfDay(hour: 5,minute: 10));
-      if(picked != null)
-      {
-        //print(picked.format(context));
-        print(picked.hour);
-      }
-    }
-
-    Future<void> _showMyDialog() async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Accept this request'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: const <Widget>[
-                  Text('Accept this visitors request to meet you?'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
 
     final newdateDBChildReference=dateDBReference.child(currentDate);
 

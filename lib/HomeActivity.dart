@@ -63,7 +63,7 @@ class _HomeActivityState extends State<HomeActivity>
 
   }
 
-  Widget setui(String fnm,String lnm,String mob,String whom_to_meet,String reason,String fstatus,String visitedstatusupdate, String uid, int index)
+  Widget setui(String fnm,String lnm,String mob,String whom_to_meet,String reason,String fstatus,String visitedstatusupdate, String uid, int index,String reschedule)
   {
 
     Future<void> _showTimePicker()async{
@@ -263,7 +263,7 @@ class _HomeActivityState extends State<HomeActivity>
                     setState(() {
 
                     });
-
+                    telephony.sendSmsByDefaultApp(to: mob, message: "Your request is been rescheduled at "+reschedule);
                   },
                       child: Text("Reschedule")),
                   ElevatedButton(onPressed: ()async{
@@ -301,6 +301,7 @@ class _HomeActivityState extends State<HomeActivity>
                                 setState(() {
 
                                 });
+                                telephony.sendSmsByDefaultApp(to: mob, message: "Your request is been denied");
                               },
                             ),
                           ],
@@ -335,7 +336,7 @@ class _HomeActivityState extends State<HomeActivity>
             itemCount: visitorList.length,
             itemBuilder:(_,index)
             {
-              return setui(visitorList[index].First_Name,visitorList[index].Last_Name,visitorList[index].Mobile_NO,visitorList[index].WhomToMeet,visitorList[index].Reason,visitorList[index].FeverStatus,visitorList[index].Visited_Status_Update, visitorList[index].Vuid, index);
+              return setui(visitorList[index].First_Name,visitorList[index].Last_Name,visitorList[index].Mobile_NO,visitorList[index].WhomToMeet,visitorList[index].Reason,visitorList[index].FeverStatus,visitorList[index].Visited_Status_Update, visitorList[index].Vuid, index, visitorList[index].getRescheduledTime());
             }
         ),
       ),

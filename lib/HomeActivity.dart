@@ -224,14 +224,15 @@ class _HomeActivityState extends State<HomeActivity>
                               onPressed: () {
                                 newdateDBChildReference.child(uid).update({
                                   'Visited_Status':true,
-                                  'Visited_Status_Update':'Accepted'
+                                  'Visited_Status_Update':'Accepted',
+                                  'RescheduledTime' : '-'
                                 });
                                 Navigator.of(context).pop();
+                                visitorList.removeAt(index);
+                                setState(() {
+
+                                });
                                 telephony.sendSmsByDefaultApp(to: mob, message: "Your request is been accepted");
-                                // visitorList.remove(index);
-                                // setState(() {
-                                //
-                                // });
                               },
                             ),
                           ],
@@ -258,6 +259,10 @@ class _HomeActivityState extends State<HomeActivity>
                         'RescheduledTime': picked.hour.toString()+ ":" +picked.minute.toString()
                       });
                     }
+                    visitorList.removeAt(index);
+                    setState(() {
+
+                    });
 
                   },
                       child: Text("Reschedule")),
@@ -288,15 +293,14 @@ class _HomeActivityState extends State<HomeActivity>
                               onPressed: () {
                                 newdateDBChildReference.child(uid).update({
                                   'Visited_Status':true,
-                                  'Visited_Status_Update':'Rescheduled',
+                                  'Visited_Status_Update':'Deny',
                                   'RescheduledTime': '-'
                                 });
                                 Navigator.of(context).pop();
+                                visitorList.removeAt(index);
+                                setState(() {
 
-                                // visitorList.remove(index);
-                                // setState(() {
-                                //
-                                // });
+                                });
                               },
                             ),
                           ],

@@ -34,6 +34,10 @@ dependencies:
   #firebase_auth: ^0.14.0+5
   fluttertoast: ^8.0.8
   shared_preferences: ^2.0.6
+  url_launcher: ^6.0.9
+  flutter_sms: ^2.3.1
+  telephony: ^0.1.4
+
 
 dev_dependencies:
   flutter_test:

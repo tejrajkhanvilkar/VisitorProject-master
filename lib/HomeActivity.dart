@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:telephony/telephony.dart';
 import 'package:visitorproject/VisitorDataModel.dart';
 
 class HomeActivity extends StatefulWidget {
@@ -16,7 +18,10 @@ class _HomeActivityState extends State<HomeActivity>
 
   // var firebaseAuth;
   var  currentUser="IuVIPmybxYM7PSeq03c9PxMBzAx1";
+  String currentDate = DateFormat("dd-MM-yyyy").format(DateTime.now());
+  final dateDBReference=FirebaseDatabase.instance.reference().child("DateDB");
   List<VisitorDataModel> visitorList=[];
+  final Telephony telephony = Telephony.instance;
 
   @override
   void initState() {
@@ -27,10 +32,9 @@ class _HomeActivityState extends State<HomeActivity>
     Firebase.initializeApp();
 
     //String currentDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    String currentDate = DateFormat("dd-MM-yyyy").format(DateTime.now());
 
 
-    final dateDBReference=FirebaseDatabase.instance.reference().child("DateDB");
+
     final dateDBChildReference=dateDBReference.child(currentDate);
 
     //final FirebaseMessaging fdbmsgToken= FirebaseMessaging.instance;
@@ -38,7 +42,7 @@ class _HomeActivityState extends State<HomeActivity>
 
 
     dateDBChildReference.onChildAdded.listen((event) {
-      visitorList.clear();
+      //visitorList.clear();
       VisitorDataModel visitordatamodel=new VisitorDataModel.fromDataSnap(event.snapshot);
       bool visited=visitordatamodel.isVisited_Status();
       if(!visited) {
@@ -59,8 +63,53 @@ class _HomeActivityState extends State<HomeActivity>
 
   }
 
-  Widget setui(String fnm,String lnm,String mob,String whom_to_meet,String reason,String fstatus,String visitedstatusupdate)
+  Widget setui(String fnm,String lnm,String mob,String whom_to_meet,String reason,String fstatus,String visitedstatusupdate, String uid, int index)
   {
+
+    Future<void> _showTimePicker()async{
+      final TimeOfDay? picked=await showTimePicker(context: context,initialTime: TimeOfDay(hour: 5,minute: 10));
+      if(picked != null)
+      {
+        //print(picked.format(context));
+        print(picked.hour);
+      }
+    }
+
+    Future<void> _showMyDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Accept this request'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const <Widget>[
+                  Text('Accept this visitors request to meet you?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    final newdateDBChildReference=dateDBReference.child(currentDate);
+
 
     return new GestureDetector(
       onLongPress: (){},
@@ -142,18 +191,118 @@ class _HomeActivityState extends State<HomeActivity>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  ElevatedButton(onPressed: (){
+                  ElevatedButton(onPressed: ()async{
+                    //_showMyDialog();
+                    // newdateDBChildReference.child(uid).update({
+                    //   'Visited_Status':true,
+                    //   'Visited_Status_Update':'Accepted'
+                    // });
+                    // visitorList.remove(index);
+
+                    return showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Accept this request'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: const <Widget>[
+                                Text('Accept this visitors request to meet you?'),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Ok'),
+                              onPressed: () {
+                                newdateDBChildReference.child(uid).update({
+                                  'Visited_Status':true,
+                                  'Visited_Status_Update':'Accepted'
+                                });
+                                Navigator.of(context).pop();
+                                telephony.sendSmsByDefaultApp(to: mob, message: "Your request is been accepted");
+                                // visitorList.remove(index);
+                                // setState(() {
+                                //
+                                // });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
 
                   },
                       child: Text("Accept"),
 
                   ),
-                  ElevatedButton(onPressed: (){
+                  ElevatedButton(onPressed: ()async{
+                    //_showTimePicker();
+
+                    final TimeOfDay? picked=await showTimePicker(context: context,initialTime: TimeOfDay(hour: 5,minute: 10));
+                    if(picked != null)
+                    {
+                      //print(picked.format(context));
+                      //print(picked.hour);
+                      newdateDBChildReference.child(uid).update({
+                        'Visited_Status':true,
+                        'Visited_Status_Update':'Rescheduled',
+                        'RescheduledTime': picked.hour.toString()+ ":" +picked.minute.toString()
+                      });
+                    }
 
                   },
                       child: Text("Reschedule")),
-                  ElevatedButton(onPressed: (){
+                  ElevatedButton(onPressed: ()async{
 
+                    return showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Deny this request'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: const <Widget>[
+                                Text('Deny this visitors request to meet you?'),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Ok'),
+                              onPressed: () {
+                                newdateDBChildReference.child(uid).update({
+                                  'Visited_Status':true,
+                                  'Visited_Status_Update':'Rescheduled',
+                                  'RescheduledTime': '-'
+                                });
+                                Navigator.of(context).pop();
+
+                                // visitorList.remove(index);
+                                // setState(() {
+                                //
+                                // });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                       child: Text("Deny")),
                 ],
@@ -182,7 +331,7 @@ class _HomeActivityState extends State<HomeActivity>
             itemCount: visitorList.length,
             itemBuilder:(_,index)
             {
-              return setui(visitorList[index].First_Name,visitorList[index].Last_Name,visitorList[index].Mobile_NO,visitorList[index].WhomToMeet,visitorList[index].Reason,visitorList[index].FeverStatus,visitorList[index].Visited_Status_Update);
+              return setui(visitorList[index].First_Name,visitorList[index].Last_Name,visitorList[index].Mobile_NO,visitorList[index].WhomToMeet,visitorList[index].Reason,visitorList[index].FeverStatus,visitorList[index].Visited_Status_Update, visitorList[index].Vuid, index);
             }
         ),
       ),
